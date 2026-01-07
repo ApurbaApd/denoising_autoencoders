@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
-from src.dataset import MedicalDenoisingDataset
+from src.datasets import MedicalDenoisingDataset
 from src.models import CAE, UNet, VAE, ResNetAE
 
 def get_model(name, device):
@@ -15,7 +15,18 @@ def get_model(name, device):
     raise ValueError(f"Unknown model: {name}")
 
 def train(args):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # print(f"--- Training {args.model.upper()} on {device} ---")
+    # 1. Check for NVIDIA GPU (Windows/Linux)
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    # 2. Check for Apple GPU (MacOS)
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    # 3. Fallback to CPU
+    else:
+        device = torch.device('cpu')
+        
     print(f"--- Training {args.model.upper()} on {device} ---")
     
     # 1. Dataset Split (80/10/10)
@@ -23,6 +34,7 @@ def train(args):
     train_size = int(0.8 * len(full_ds))
     val_size = int(0.1 * len(full_ds))
     test_size = len(full_ds) - train_size - val_size
+    
     
     train_ds, val_ds, test_ds = random_split(full_ds, [train_size, val_size, test_size])
     

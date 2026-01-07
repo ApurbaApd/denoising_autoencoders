@@ -1,6 +1,7 @@
 import os
 import torch
 from torch.utils.data import Dataset
+# from src import Dataset
 from PIL import Image
 import torchvision.transforms as transforms
 
@@ -8,6 +9,7 @@ class MedicalDenoisingDataset(Dataset):
     def __init__(self, root_dir, noise_factor=0.3, img_size=128):
         self.root_dir = root_dir
         self.noise_factor = noise_factor
+        self.img_size = img_size
         valid_exts = ('.png', '.jpg', '.jpeg', '.tif', '.bmp', '.dcm')
         # Filter for valid files only
         self.files = [os.path.join(root_dir, f) for f in os.listdir(root_dir) 
