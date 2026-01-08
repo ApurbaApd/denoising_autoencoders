@@ -6,7 +6,15 @@ from src.metrics import get_metrics_batch
 import os
 
 def evaluate_all():
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    # 2. Check for Apple GPU (MacOS)
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    # 3. Fallback to CPU
+    else:
+        device = torch.device('cpu')
     
     # 1. Load Test Data
     if not os.path.exists("data/splits/test_split.pt"):
