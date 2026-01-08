@@ -56,8 +56,8 @@ def evaluate_all():
             metrics = get_metrics_batch(clean, out)
             print(f"{name:<10} | {metrics['PSNR']:.2f} dB   | {metrics['SSIM']:.4f}     | {metrics['EPI']:.4f}")
             #save output for visualization
-            os.makedirs("results", exist_ok=True)
-            torch.save(out, f"results/{name}_metrics.pdf")
+            # os.makedirs("results", exist_ok=True)
+            # torch.save(out, f"results/{name}_metrics.pdf")
             
             results[name] = out
             
